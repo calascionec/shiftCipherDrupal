@@ -1,0 +1,57 @@
+<?php
+
+function shift_cipher_menu() {
+  $items['shift_cipher'] = array(
+    'title' => 'Shift Cipher',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('shift_cipher_form'),
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['shift_cipher_success_page'] = array(
+    'title' => 'Success',
+    'page callback' => 'shift_cipher_success',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+function shift_cipher_form() {
+  $form['shift_value'] = array(
+    '#title' => 'Shift Value',
+    '#type' => 'textfield',
+    '#description' => t('enter a positive value to shift the letters by'),
+  );
+
+  $form['shift_direction'] = array(
+    '#title' => 'Shift Direction',
+    '#type' => 'textfield',
+    '#description' => t('Enter a direction to shift the letters.("left" or "right")'),
+  );
+
+  $form['shift_phrase'] = array(
+    '#title' => 'Phrase to Shift',
+    '#type' => 'textfield',
+    '#description' => t("Enter your phrase to shift!"),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Shift!',
+  );
+
+  return $form;
+}
+
+function shift_cipher_form_submit($form, &$form_state) {
+  $shift_value = (int)$form_state['shift_value'];
+  $shift_direction = strToLower($form_state['shift_direction']);
+  $shift_phrase = strToLower($form_state['shift_phrase']);
+  $alphabet = range('a', 'z');
+
+  $shift_phrase_array = explode($shift_phrase, "");
+
+}

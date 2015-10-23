@@ -1,0 +1,5 @@
+name = Shift Cipher
+description = will allow a user to encrypt a message.
+package = Epicodus Review
+core = 7.x
+files[] = shift_cipher.module
