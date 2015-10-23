@@ -12,13 +12,11 @@ This site allows a user to input a shift value, a shift direction, and a phrase 
 
 1. Clone this repository
 2. Upload the database found in sites/all/database
-    DB username: bookstore_admin
-    DB password: password
+    DB username: epicodus
+    DB password: epicodus
 3. Open MAMP, point it to the cloned folder, start servers.
 4. Log in as the user of your choice.
-    admin/password
-    Reviewer/password
-    user/password
+    epicodus/epicodus (admin account)
 5. Enjoy!
 
 
