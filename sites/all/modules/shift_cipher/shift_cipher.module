@@ -47,11 +47,28 @@ function shift_cipher_form() {
 }
 
 function shift_cipher_form_submit($form, &$form_state) {
-  $shift_value = (int)$form_state['shift_value'];
-  $shift_direction = strToLower($form_state['shift_direction']);
-  $shift_phrase = strToLower($form_state['shift_phrase']);
+  $shift_value = (int)$form_state['values']['shift_value'];
+  $shift_direction = strToLower($form_state['values']['shift_direction']) == 'right' ? 1 : -1;
+  $shift_phrase = strToLower($form_state['values']['shift_phrase']);
   $alphabet = range('a', 'z');
+  $result_array = array();
 
-  $shift_phrase_array = explode($shift_phrase, "");
+  $shift_phrase_array = str_split($shift_phrase);
 
+  foreach($shift_phrase_array as $letter) {
+    if (in_array($letter, $alphabet)) {
+      array_push($result_array, $alphabet[array_search($letter, $alphabet) + ($shift_value*$shift_direction)]);
+    } else {
+      array_push($result_array, $letter);
+    }
+  }
+  $_SESSION['var_dump'] = $shift_phrase_array;
+  $_SESSION['result'] = implode($result_array);
+  $form_state['redirect'] = 'shift_cipher_success_page';
+
+}
+
+function shift_cipher_success() {
+  var_dump($_SESSION['var_dump']);
+  return $_SESSION['result'];
 }
