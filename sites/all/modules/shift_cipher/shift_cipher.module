@@ -24,18 +24,24 @@ function shift_cipher_form() {
     '#title' => 'Shift Value',
     '#type' => 'textfield',
     '#description' => t('enter a positive value to shift the letters by'),
+    '#element_validate' => array('element_validate_integer_positive'),
+    '#required' => TRUE,
   );
 
   $form['shift_direction'] = array(
     '#title' => 'Shift Direction',
     '#type' => 'textfield',
     '#description' => t('Enter a direction to shift the letters.("left" or "right")'),
+    '#element_validate' => array('element_validate_left_right'),
+    '#required' => TRUE,
   );
 
   $form['shift_phrase'] = array(
     '#title' => 'Phrase to Shift',
     '#type' => 'textfield',
     '#description' => t("Enter your phrase to shift!"),
+    '#element_validate' => array('element_validate_shift_phrase'),
+    '#required' => TRUE,
   );
 
   $form['submit'] = array(
@@ -56,19 +62,44 @@ function shift_cipher_form_submit($form, &$form_state) {
   $shift_phrase_array = str_split($shift_phrase);
 
   foreach($shift_phrase_array as $letter) {
+    $shift_letter_index = array_search($letter, $alphabet) + ($shift_value * $shift_direction);
+    if ($shift_letter_index > 25) {
+      $shift_letter_index = ($shift_letter_index % 26);
+    } elseif ($shift_letter_index < 0 && $shift_letter_index >= -25){
+      $shift_letter_index += 26;
+    } elseif ($shift_letter_index < -25) {
+      $shift_letter_index = ($shift_letter_index % 26) * -1;
+    }
     if (in_array($letter, $alphabet)) {
-      array_push($result_array, $alphabet[array_search($letter, $alphabet) + ($shift_value*$shift_direction)]);
+      array_push($result_array, $alphabet[$shift_letter_index]);
     } else {
       array_push($result_array, $letter);
     }
   }
-  $_SESSION['var_dump'] = $shift_phrase_array;
+
   $_SESSION['result'] = implode($result_array);
   $form_state['redirect'] = 'shift_cipher_success_page';
 
 }
 
 function shift_cipher_success() {
-  var_dump($_SESSION['var_dump']);
   return $_SESSION['result'];
+}
+
+// function element_validate_integer_less_than_26($element) {
+//   if ($element['#value'] > 26) {
+//     form_error($element, t("Value must be a positive integer that is not greater than 26."));
+//   }
+// }
+
+function element_validate_left_right($element) {
+  if (!((strToLower($element['#value'])) == 'right' || (strToLower($element['#value'])) == 'left')) {
+    form_error($element, t('You must enter either "right" or "left"!'));
+  }
+}
+
+function element_validate_shift_phrase($element) {
+  if (preg_match('/[^a-zA-Z\s\p{P}]/', $element['#value'])) {
+    form_error($element, t('Please only enter letters and punctuation!'));
+  }
 }
